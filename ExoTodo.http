@@ -1,0 +1,6 @@
+@ExoTodo_HostAddress = http://localhost:5127
+
+GET {{ExoTodo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
