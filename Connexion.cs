@@ -1,18 +1,39 @@
-﻿using Microsoft.Data.SqlClient;
-using ExoTodo.Config;
+﻿using ExoTodo.Config;
+using Microsoft.Data.SqlClient;
+using System.Data;
 namespace ExoTodo
 {
-    public class Connexion
+    public abstract class Connexion
     {
-        private string ConnexionString = new Settings().GetDbString();
+        private readonly string ConnexionString;
 
-        public SqlConnection GetConnection()
+        protected SqlConnection _connexion;
+
+        public Connexion()
         {
-            SqlConnection connexion = new SqlConnection(ConnexionString);
+            ConnexionString = new Settings().GetDbString();
+        }
 
-            connexion.Open();
+        protected void DbConnecter()
+        {
+            if (_connexion == null || _connexion.State == ConnectionState.Closed)
+            {
+                this.GetConnection();
+            }
+        }
 
-            return connexion;
+        protected void DbDeconnecter()
+        {
+            if (_connexion == null || _connexion.State != ConnectionState.Closed)
+            {
+                this._connexion.Close();
+            }
+        }
+        private void GetConnection()
+        {
+            this._connexion = new SqlConnection(this.ConnexionString);
+
+            _connexion.Open();
         }
     }
 }

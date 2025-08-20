@@ -4,27 +4,11 @@ using System.Data;
 
 namespace ExoTodo.Repository
 {
-    public class InscriptionRepo
+    public class InscriptionRepo : Connexion
     {
-        private SqlConnection _connexion;
-
-        public InscriptionRepo()
-        {
-            DbConnecter();
-        }
-
-        private void DbConnecter()
-        {
-            Connexion maConnexion = new Connexion();
-            _connexion = maConnexion.GetConnection();
-        }
-
         public int AddNewUser(Utilisateurs unUtilisateur)
         {
-            if (_connexion == null || _connexion.State == ConnectionState.Closed)
-            {
-                DbConnecter();
-            }
+            DbConnecter();
 
             SqlCommand cmd = _connexion.CreateCommand();
 
@@ -39,6 +23,8 @@ namespace ExoTodo.Repository
             UtilMdp.Value = unUtilisateur.UtilMdp;
 
             int resultat = cmd.ExecuteNonQuery();
+
+            DbDeconnecter();
 
             return resultat;
         }

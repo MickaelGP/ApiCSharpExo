@@ -5,25 +5,11 @@ using System.Data;
 
 namespace ExoTodo.Repository
 {
-    public class TacheRepo : ICrudTaches
+    public class TacheRepo : Connexion, ICrudTaches
     {
-        private SqlConnection _connexion;
-
-        public TacheRepo()
-        {
-            DbConnecter();
-        }
-        private void DbConnecter()
-        {
-            Connexion maConnexion = new Connexion();
-            _connexion = maConnexion.GetConnection();
-        }
         public int DeleteTask(int unId)
         {
-            if (_connexion == null || _connexion.State == ConnectionState.Closed)
-            {
-                DbConnecter();
-            }
+            DbConnecter();
 
             SqlCommand cmd = _connexion.CreateCommand();
 
@@ -35,15 +21,14 @@ namespace ExoTodo.Repository
 
             int resultat = cmd.ExecuteNonQuery();
 
+            DbConnecter() ;
+
             return resultat;
         }
 
         public List<Taches> GetAllTaskByUserId(int utilId)
         {
-            if (_connexion == null || _connexion.State == ConnectionState.Closed)
-            {
-                DbConnecter();
-            }
+            DbConnecter();
 
             List<Taches> listeTaches = new List<Taches>();
 
@@ -67,17 +52,16 @@ namespace ExoTodo.Repository
                 };
                 listeTaches.Add(taches);
             }
-            this._connexion.Close();
+
+            DbDeconnecter() ;
 
             return listeTaches;
         }
 
         public Taches GetTaskById(int unId)
         {
-            if (_connexion == null || _connexion.State == ConnectionState.Closed)
-            {
-                DbConnecter();
-            }
+            DbConnecter();
+
             Taches unTodo = null;
 
             SqlCommand cmd = _connexion.CreateCommand();
@@ -99,17 +83,15 @@ namespace ExoTodo.Repository
                     TodoNom = reader["TodoNom"].ToString()
                 };
             }
-            this._connexion.Close();
+
+            DbDeconnecter();
 
             return unTodo;
         }
 
         public int InsertTask(Taches uneTache)
         {
-            if (_connexion == null || _connexion.State == ConnectionState.Closed)
-            {
-                DbConnecter();
-            }
+            DbConnecter();
 
             SqlCommand cmd = _connexion.CreateCommand();
 
@@ -125,15 +107,14 @@ namespace ExoTodo.Repository
 
             int resultat = cmd.ExecuteNonQuery();
 
+            DbDeconnecter();
+
             return resultat;
         }
 
         public int UpdateTask(Taches uneTache)
         {
-            if (_connexion == null || _connexion.State == ConnectionState.Closed)
-            {
-                DbConnecter();
-            }
+            DbConnecter();
 
             SqlCommand cmd = _connexion.CreateCommand();
 
@@ -145,11 +126,11 @@ namespace ExoTodo.Repository
 
             TodoNom.Value = uneTache.TodoNom;
             TodoCompleter.Value = uneTache.TodoCompleter;
-            TodoId.Value= uneTache.TodoId;
+            TodoId.Value = uneTache.TodoId;
 
             int resultat = cmd.ExecuteNonQuery();
 
-            this._connexion.Close();
+            DbDeconnecter();
 
             return resultat;
         }

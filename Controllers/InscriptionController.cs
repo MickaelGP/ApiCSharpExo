@@ -30,7 +30,7 @@ namespace ExoTodo.Controllers
                 });
             }
 
-            return Ok(new {message = "Inscription réussie"});
+            return Ok(new { message = "Inscription réussie" });
         }
     }
 }
